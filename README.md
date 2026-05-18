@@ -6,17 +6,10 @@
 [![pyvene](https://img.shields.io/badge/pyvene-0.1.2-orange.svg)](https://github.com/stanfordnlp/pyvene)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Venue](https://img.shields.io/badge/EMNLP-2026-purple.svg)](#)
 
 > **Succinctness Predicts the Syntax Gap between Transformers and Recurrent Models**
 >
 > *Anonymous submission to EMNLP 2026 (ARR May 2026)*
-
----
-
-## TL;DR
-
-**Formal language theory can predict which neural architecture will succeed on which syntactic task, before running any experiment.** B-RASP program analysis shows Transformers encode syntactic computations in constant depth while sequential models face growing complexity with dependency distance. All 7 directional predictions are confirmed across 5 architectures, and causal intervention (DAS) verifies the Transformer implements the predicted algorithm (IIA ≥ 0.95) while Mamba does not (compositional IIA ≈ chance).
 
 ---
 
