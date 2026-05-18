@@ -1,0 +1,13 @@
+# DAS evaluation configuration
+das:
+  lr: 0.01
+  steps: 2000
+  batch_size: 256
+  ranks: [1, 2, 4, 8]
+  n_inits: 3
+  intervention_target: "residual_stream"
+  position: "consumed"  # position after last relevant token
+
+counterfactual:
+  train_pairs: 10000
+  test_pairs: 2000

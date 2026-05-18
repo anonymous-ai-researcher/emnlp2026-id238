@@ -1,0 +1,24 @@
+# Training configuration
+training:
+  lr: 1.0e-3
+  weight_decay: 1.0
+  beta1: 0.9
+  beta2: 0.999
+  batch_size: 512
+  steps: 40000
+  eval_every: 500
+  n_seeds: 5
+
+model:
+  d_embed: 32
+  d_h: 128
+  n_layers: 2
+  n_heads: 4      # Transformer only
+  d_ff: 512       # Transformer / RWKV
+  ssm_state: 16   # Mamba only
+  dropout: 0.0
+
+data:
+  vocab_size: 11
+  max_len: 64
+  n_classes: 2

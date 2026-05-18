@@ -1,0 +1,8 @@
+# Width scaling configuration
+width_scaling:
+  d_h_values: [32, 64, 128, 256, 512, 1024]
+  architectures: [tf, lstm, mamba]
+  phenomena: [agreement, npi, reflexive, concord, mc_npi, cc_binding]
+  fixed_distance: 4     # for agreement
+  fixed_depth: 3        # for mc_npi
+  n_seeds: 5

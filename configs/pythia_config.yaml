@@ -1,0 +1,21 @@
+# Pythia evaluation configuration
+pythia:
+  models: [160m, 410m, 1.4b]
+  blimp_paradigms:
+    agreement: [anaphor_gender_agreement, anaphor_number_agreement,
+                determiner_noun_agreement_1, determiner_noun_agreement_2,
+                determiner_noun_agreement_irregular_1, determiner_noun_agreement_irregular_2,
+                determiner_noun_agreement_with_adj_1, determiner_noun_agreement_with_adj_2,
+                determiner_noun_agreement_with_adj_irregular_1,
+                determiner_noun_agreement_with_adj_irregular_2,
+                distractor_agreement_relational_noun, distractor_agreement_relative_clause,
+                irregular_plural_subject_verb_agreement_1,
+                irregular_plural_subject_verb_agreement_2,
+                regular_plural_subject_verb_agreement_1,
+                regular_plural_subject_verb_agreement_2,
+                sentential_negation_npi_licensor_present,
+                sentential_negation_npi_scope]
+  das:
+    variables: [subj_num, verb_form, has_lic, npi_ok]
+    ranks: [1, 2, 4, 8]
+    steps: 2000
