@@ -1,4 +1,4 @@
-# Succinctness Predicts Syntax 🧬
+# Succinctness, Not Expressivity, Predicts Syntactic Competence 🧬
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.1%2B-red.svg)](https://pytorch.org/)
@@ -6,10 +6,17 @@
 [![pyvene](https://img.shields.io/badge/pyvene-0.1.2-orange.svg)](https://github.com/stanfordnlp/pyvene)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Venue](https://img.shields.io/badge/EMNLP-2026-purple.svg)](#)
 
-> **Succinctness Predicts the Syntax Gap between Transformers and Recurrent Models**
+> **Succinctness, Not Expressivity, Predicts Syntactic Competence**
 >
 > *Anonymous submission to EMNLP 2026 (ARR May 2026)*
+
+---
+
+## TL;DR
+
+**Formal language theory can predict which neural architecture will succeed on which syntactic task, before running any experiment.** B-RASP program analysis shows Transformers encode syntactic computations in constant depth while sequential models face growing complexity with dependency distance. All 7 directional predictions are confirmed across 5 architectures, and causal intervention (DAS) verifies the Transformer implements the predicted algorithm (IIA ≥ 0.95) while Mamba does not (compositional IIA ≈ chance).
 
 ---
 
@@ -18,7 +25,7 @@
 | Finding | Evidence |
 |:--------|:---------|
 | 🎯 7/7 directional predictions confirmed | TF > 96% vs Mamba < 55% at max complexity |
-| 📐 Gap resists 46× parameter scaling | Mamba@d_h=1024 still below TF@d_h=64 |
+| 📐 Gap resists 79× parameter scaling | Mamba@d_h=1024 still below TF@d_h=64 |
 | 🔬 Causal alignment confirmed in TF | IIA ≥ 0.95 for all 8 prescribed variables |
 | ❌ Mamba fails causally despite high accuracy | Compositional IIA ≈ chance (0.53 -- 0.54) |
 | 📈 Assembly follows dependency order | Atomic before compositional in 20/20 seeds |
@@ -100,11 +107,11 @@ succinctness-syntax/
 │
 ├── src/                              # Source code
 │   ├── models/                         # 5 architecture implementations
-│   │   ├── transformer.py                # 2-layer causal Transformer
-│   │   ├── lstm.py                       # 2-layer LSTM
-│   │   ├── mamba_model.py                # 2-layer Mamba (selective SSM)
-│   │   ├── gru.py                        # 2-layer GRU
-│   │   └── rwkv.py                       # 2-layer RWKV-4
+│   │   ├── transformer.py                # 2-layer causal Transformer (401K params)
+│   │   ├── lstm.py                       # 2-layer LSTM (269K params)
+│   │   ├── mamba_model.py                # 2-layer Mamba, selective SSM (239K params)
+│   │   ├── gru.py                        # 2-layer GRU (203K params)
+│   │   └── rwkv.py                       # 2-layer RWKV-4 (432K params)
 │   ├── brasp/                          # Formal language theory
 │   │   ├── programs.py                   # All 6 B-RASP programs (|P|=2 each)
 │   │   └── scm.py                        # SCM compilation from B-RASP
@@ -138,6 +145,22 @@ succinctness-syntax/
     ├── test_brasp.py                   # B-RASP program correctness
     └── test_scm.py                     # SCM counterfactual verification
 ```
+
+---
+
+## Model Architectures
+
+All from-scratch models use 2 layers, d_h = 128, d_embed = 32, vocab = 11, and d_ff = 512 (where applicable).
+
+| Architecture | Params | Key components |
+|:-------------|-------:|:---------------|
+| Transformer  |  401K  | 4 heads, head_dim=32, d_ff=512, causal mask |
+| LSTM         |  269K  | 2-layer, standard PyTorch |
+| Mamba        |  239K  | d_state=16, d_conv=4, expand=2 |
+| GRU          |  203K  | 2-layer, standard PyTorch |
+| RWKV-4       |  432K  | Linear attention, d_ff=512 |
+
+The Transformer has 1.68× more parameters than Mamba at d_h=128. This makes the comparison conservative for the Transformer; the width-scaling experiment shows the gap persists even when Mamba has **79× more** parameters.
 
 ---
 
@@ -214,6 +237,19 @@ python scripts/run_width_scaling.py \
     --d_h_values 32 64 128 256 512 1024
 ```
 
+Parameter counts across the width scaling grid:
+
+| d_h | TF | LSTM | Mamba | GRU | RWKV |
+|----:|----:|-----:|------:|----:|-----:|
+| 32  | 77K | 18K | 22K | 14K | 78K |
+| 64  | 169K | 69K | 68K | 53K | 175K |
+| 128 | 401K | 269K | 239K | 203K | 432K |
+| 256 | 1.06M | 1.06M | 886K | 799K | 1.19M |
+| 512 | 3.17M | 4.22M | 3.41M | 3.17M | 3.69M |
+| 1024 | 10.5M | 16.8M | 13.4M | 12.6M | 12.6M |
+
+Key finding: Mamba@d_h=1024 (13.4M params) still underperforms TF@d_h=64 (169K params), a **79× parameter disadvantage** for the Transformer that still does not close the gap.
+
 ### 6. Pythia Evaluation
 
 ```bash
@@ -241,7 +277,7 @@ python scripts/run_dynamics.py --archs tf mamba --n_checkpoints 15
 | Experiment group | GPU-hours |
 |:-----------------|----------:|
 | From-scratch training (5 arch × 6 phen × 5 seeds) | 75 |
-| Width scaling (3 arch × 6 widths × 6 phen × 5 seeds) | 150 |
+| Width scaling (5 arch × 6 widths × 6 phen × 5 seeds) | 150 |
 | DAS evaluation + controls | 55 |
 | Training dynamics (2 arch × 15 ckpts × 5 seeds) | 40 |
 | Ablation studies (14 experiments) | 80 |
@@ -276,13 +312,6 @@ pytest tests/test_scm.py -v
 ```
 
 ---
-
-## Citation
-
-```
-This paper is currently under anonymous review.
-Citation information will be provided upon acceptance.
-```
 
 ## License
 
