@@ -5,7 +5,6 @@
 [![CUDA](https://img.shields.io/badge/CUDA-12.1-green.svg)](https://developer.nvidia.com/cuda-toolkit)
 [![pyvene](https://img.shields.io/badge/pyvene-0.1.2-orange.svg)](https://github.com/stanfordnlp/pyvene)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Venue](https://img.shields.io/badge/EMNLP-2026-purple.svg)](#)
 
 > **Succinctness, Not Expressivity, Predicts Syntactic Competence**
